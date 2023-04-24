@@ -1,102 +1,118 @@
-﻿using System;
+﻿using ConsoleApp1;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace ConsoleApp2
+namespace ConsoleApp1
 {
+    public class Book
+    {
+        public string BookName { get; set; }
+        public string BookAuthor { get; set; }
+        public int Isbn { get; set; }
+        public int BookCreateDate { get; set; }
+    }
+
+    class FictionBook : Book
+    {
+        public int Ganre { get; set; }
+    }
+
+    class NonFictionBook : Book
+    {
+        public int Ganre { get; set; }
+    }
+
+
+    public class Library<T>
+    {
+        public Library(User user, Book book)
+        {
+            Users = new List<User>();
+            Books = new List<Book>();
+            Users.Add(user);
+            Books.Add(book);
+        }
+        public Library(User[] user, Book[] book)
+        {
+            Users = user.ToList();
+            Books = book.ToList();
+        }
+
+        public List<User> Users { get; set; }
+        public List<Book> Books { get; set; }
+
+
+        public bool AddUser(User user)
+        {
+            if (Users.Contains(user))
+            {
+                return false;
+            }
+            else
+            {
+                Users.Add(user);
+                return true;
+            }
+        }
+
+
+        public void Addbook(Book book, User user)
+        {
+            if (AddUser(user) == false)
+            {
+
+
+                foreach (var item in Books)
+                {
+
+                    if (book.Equals(item))
+                    {
+                        Console.WriteLine("whe alredy have this book");
+                    }
+                    else
+                    {
+                        Books.Add(book);
+                        Console.WriteLine("book added");
+                    }
+                }
+
+            }
+            else
+            {
+                AddUser(user);
+                Console.WriteLine("user alredy added");
+                Addbook(book, user);
+            }
+        }
+    }
+    public class User
+    {
+        public string UserName { get; set; }
+        public string Pasword { get; set; }
+        public string Email { get; set; }
+    }
+
+
+
+
     class Program
     {
         static void Main(string[] args)
         {
-            var numbersMas = new int[10];
-            int numb = 0;
-            Console.WriteLine("pls enter 10 numbers :");
-            for (int i = 0; i < numbersMas.Length; i++)
-            {
-                numbersMas[i] = InsertNumbers(numb);
+            var user = new User[] {
+            new User{UserName="beka",Pasword="123",Email="112"}
             };
-            Console.WriteLine("thinking,.........");
-            Console.WriteLine("sorted array is:");
-            MathSort(numbersMas);
-            Console.WriteLine("highest number-lower is:");
-            var answer = HighestMinusLowest(numbersMas);
-            Console.WriteLine(answer);
-            Console.WriteLine("is odd or even?");
-            OddOrEven(numbersMas);
-            Console.WriteLine($"Sum off array is: {SumOfArray(numbersMas)}");
-            Console.WriteLine("goodbye");
 
-            static int InsertNumbers(int number)
-            {
-                number = Convert.ToInt32(Console.ReadLine());
-                return number;
-            }
-            static void MathSort(params int[] sortMath)
-            {
-                int MaxValue;
-                for (int i = 0; i < sortMath.Length; i++)
-                {
-                    for (int j = i + 1; j < sortMath.Length; j++)
-                    {
-                        if (sortMath[i] > sortMath[j])
-                        {
-                            MaxValue = sortMath[i];
-                            sortMath[i] = sortMath[j];
-                            sortMath[j] = MaxValue;
-                        }
-                    }
-                }
-                for (int i = 0; i < sortMath.Length; i++)
-                {
-                    Console.WriteLine(sortMath[i]);
-                }
-            }
 
-            static int HighestMinusLowest(params int[] array)
-            {
-                int lowest = 0;
-                int highest = 0;
-                for (int i = 0; i < array.Length; i++)
-                {
-                    highest = array[0];
-                    if (highest < array[i])
-                    {
-                        highest = array[i];
-                    }
-                    lowest = array[0];
-                    if (highest < array[i])
-                    {
-                        highest = array[i];
-                    }
-                }
-                return highest - lowest;
-            }
-            static void OddOrEven(params int[] array)
-            {
-                for (int i = 0; i < array.Length; i++)
-                {
-                    if (array[i] % 2 != 0)
-                    {
-                        Console.WriteLine($"{array[i]} is Odd");
-                    }
-                    else if (array[i] % 2 == 0 && array[i] % 3 == 0)
-                    {
-                        Console.WriteLine($"{array[i]} is even");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"I am not sure but i think {array[i]} is Odd ");
-                    }
-                }
-            }
-            static int SumOfArray(params int[] array)
-            {
-                int answer = 0;
-                for (int i = 0; i < array.Length; i++)
-                {
-                    answer = answer + array[i];
-                }
-                return answer;
-            }
+            Book[] book = new Book[] {
+                new Book{ BookAuthor="book",BookName="123",BookCreateDate=12,Isbn=12}
+            };
+
+            var library = new Library<string>(user, book);
         }
     }
-}
 
+
+}
